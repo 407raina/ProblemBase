@@ -992,7 +992,7 @@ function LeaderboardPage({ problems, solutions, currentUser }) {
 
       <div className="grid-2">
         <div>
-          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>ðŸ† Top problem posters</div>
+          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>Top problem posters</div>
           <div className="card" style={{ padding: "8px 20px" }}>
             {topPosters.length === 0 ? (
               <div style={{ padding: "12px 0", fontSize: 13, color: "var(--text3)" }}>No poster data yet.</div>
