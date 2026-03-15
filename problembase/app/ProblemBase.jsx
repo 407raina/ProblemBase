@@ -1,89 +1,12 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 
 const INDUSTRIES = ["All", "Healthcare", "Fintech", "SMB", "Education", "Logistics", "HR & Hiring", "Legal", "Real Estate", "Climate"];
 const FREQUENCIES = ["Daily", "Weekly", "Monthly", "Occasionally"];
 const STATUSES = ["open", "being_built", "solved"];
-
-const SEED_PROBLEMS = [
-  {
-    id: 1, title: "Hospital billing is completely opaque \u2014 patients can't understand their charges",
-    description: "After any medical visit, patients receive bills weeks later with cryptic codes, no itemization, and no way to verify accuracy. The system is designed to confuse. I've been overbilled three times and had to fight each time.",
-    who: "Patients, uninsured adults, low-income families", industry: "Healthcare", region: "USA",
-    severity: 9, frequency: "Daily", meToo: 2341, votes: 4102, bounty: 5000, status: "being_built",
-    buildersCount: 3, score: 9.1, posted: "2025-11-14", posterName: "Sarah K.", posterId: 2,
-    comments: 87, tags: ["billing", "transparency", "insurance"]
-  },
-  {
-    id: 2, title: "Small restaurants can't afford proper inventory management software",
-    description: "Every tool I've tried costs $200+/month and is built for chains, not a 12-table bistro. I end up using spreadsheets that are always wrong. I've thrown out thousands in expired stock this year alone.",
-    who: "Independent restaurant owners, food truck operators", industry: "SMB", region: "Global",
-    severity: 7, frequency: "Daily", meToo: 1087, votes: 2200, bounty: 0, status: "open",
-    buildersCount: 1, score: 7.4, posted: "2025-12-02", posterName: "Marco R.", posterId: 3,
-    comments: 34, tags: ["inventory", "restaurants", "SMB"]
-  },
-  {
-    id: 3, title: "No easy way to track medications for elderly parents who live alone",
-    description: "My mother takes 8 medications at different times. I live 3 hours away. Every app I've tried is too complex for her, and pill dispensers don't sync to my phone. She missed critical doses twice last year.",
-    who: "Adult children of elderly parents, caregivers", industry: "Healthcare", region: "India",
-    severity: 8, frequency: "Daily", meToo: 876, votes: 1540, bounty: 1200, status: "open",
-    buildersCount: 0, score: 8.2, posted: "2026-01-08", posterName: "Priya M.", posterId: 4,
-    comments: 52, tags: ["elderly", "caregiving", "medication"]
-  },
-  {
-    id: 4, title: "Freelancers have no straightforward way to chase overdue invoices",
-    description: "I spend 3â€“5 hours per week just following up on unpaid invoices. There's no tool that automatically escalates, sends legal-sounding reminders, and tracks the full paper trail without costing a fortune.",
-    who: "Freelance designers, developers, consultants", industry: "Fintech", region: "Global",
-    severity: 8, frequency: "Weekly", meToo: 3210, votes: 5600, bounty: 2500, status: "being_built",
-    buildersCount: 2, score: 8.7, posted: "2025-10-20", posterName: "Alex T.", posterId: 5,
-    comments: 113, tags: ["invoicing", "freelance", "payments"]
-  },
-  {
-    id: 5, title: "Teachers can't easily identify which students are falling behind in real time",
-    description: "With 35 kids in a class, I have no dashboard showing me who's struggling with what. By the time I notice a pattern it's been weeks. Existing tools are either too expensive or require 2 hours of setup per student.",
-    who: "Primary and secondary school teachers", industry: "Education", region: "UK",
-    severity: 7, frequency: "Daily", meToo: 921, votes: 1780, bounty: 800, status: "open",
-    buildersCount: 1, score: 7.1, posted: "2026-01-22", posterName: "James O.", posterId: 6,
-    comments: 29, tags: ["education", "classroom", "analytics"]
-  },
-  {
-    id: 6, title: "Truck drivers can't find available parking at rest stops before it's too late",
-    description: "Rest stop parking fills up hours in advance, but there's no app showing real-time occupancy. I've driven 40 extra miles to find a spot. This creates dangerous situations when drivers are forced to park illegally.",
-    who: "Long-haul truck drivers, logistics companies", industry: "Logistics", region: "USA",
-    severity: 9, frequency: "Daily", meToo: 644, votes: 1100, bounty: 3000, status: "open",
-    buildersCount: 0, score: 8.8, posted: "2026-02-11", posterName: "Dave H.", posterId: 7,
-    comments: 41, tags: ["trucking", "parking", "safety"]
-  },
-  {
-    id: 7, title: "Small law firms can't afford eDiscovery tools built for BigLaw",
-    description: "The cheapest eDiscovery platforms start at $5,000/month. I represent individuals and small businesses \u2014 my whole firm runs on $8k/month revenue. I'm stuck reviewing documents manually and it kills my margins.",
-    who: "Solo attorneys, small law firms (1â€“5 attorneys)", industry: "Legal", region: "USA",
-    severity: 8, frequency: "Monthly", meToo: 320, votes: 680, bounty: 10000, status: "open",
-    buildersCount: 2, score: 8.0, posted: "2026-02-28", posterName: "Dana L.", posterId: 8,
-    comments: 61, tags: ["legal", "eDiscovery", "SMB"]
-  },
-  {
-    id: 8, title: "HR teams lose track of contractor compliance documents across dozens of vendors",
-    description: "We manage 80+ contractors. Their certifications, NDAs, and insurance docs expire at different times. I have a spreadsheet and a prayer. Last quarter we had an audit and two contractors were technically non-compliant.",
-    who: "HR managers at mid-size companies, procurement teams", industry: "HR & Hiring", region: "Global",
-    severity: 7, frequency: "Weekly", meToo: 540, votes: 990, bounty: 1500, status: "solved",
-    buildersCount: 1, score: 7.6, posted: "2025-09-15", posterName: "Nisha B.", posterId: 9,
-    comments: 44, tags: ["HR", "compliance", "contractors"]
-  }
-];
-
-const SEED_USERS = [
-  { id: 1, name: "You", username: "you", role: "both", posterScore: 420, builderScore: 1840, bountyEarned: 2200, solutionsShipped: 1, problemsPosted: 4, avatar: "YO" },
-  { id: 2, name: "Sarah K.", username: "sarahk", role: "poster", posterScore: 890, builderScore: 0, problemsPosted: 12, avatar: "SK" },
-  { id: 3, name: "Marco R.", username: "marcor", role: "poster", posterScore: 310, builderScore: 0, problemsPosted: 3, avatar: "MR" },
-];
-
-const SEED_SOLUTIONS = [
-  { id: 1, problemId: 4, title: "InvoiceHound", builder: "You", status: "beta", progress: 60, teamSize: 2, launchIn: "3 weeks", url: "#", description: "Automated invoice follow-up with legal escalation templates, Stripe integration, and full audit trail." }
-];
 
 // â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -126,6 +49,22 @@ function normalizeProblem(problem) {
       : typeof problem.tags === "string" && problem.tags.trim()
       ? problem.tags.split(",").map(tag => tag.trim())
       : [],
+  };
+}
+
+function normalizeSolution(solution) {
+  return {
+    ...solution,
+    problemId: solution.problemId ?? solution.problem_id ?? null,
+    builderId: solution.builderId ?? solution.builder_id ?? null,
+    builder: solution.builder ?? solution.builder_name ?? "Builder",
+    progress: Number(solution.progress ?? 0),
+    teamSize: Number(solution.teamSize ?? solution.team_size ?? 1),
+    launchIn: solution.launchIn ?? solution.launch_in ?? "TBD",
+    status: solution.status ?? "in_progress",
+    title: solution.title ?? "Untitled solution",
+    description: solution.description ?? "",
+    bountyEarned: Number(solution.bountyEarned ?? solution.bounty_earned ?? 0),
   };
 }
 
@@ -411,7 +350,7 @@ function ProblemCard({ problem, onClick, voted, onVote }) {
 
 // â”€â”€â”€ Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function HomePage({ setPage, problems }) {
+function HomePage({ setPage, problems, stats }) {
   return (
     <div>
       <div className="hero">
@@ -425,19 +364,19 @@ function HomePage({ setPage, problems }) {
           </div>
           <div className="hero-stats">
             <div style={{ textAlign: "center" }}>
-              <div className="hero-stat-val">12,847</div>
+              <div className="hero-stat-val">{stats.problemsPosted.toLocaleString()}</div>
               <div className="hero-stat-label">Problems posted</div>
             </div>
             <div style={{ textAlign: "center" }}>
-              <div className="hero-stat-val">1,204</div>
+              <div className="hero-stat-val">{stats.beingBuilt.toLocaleString()}</div>
               <div className="hero-stat-label">Being built</div>
             </div>
             <div style={{ textAlign: "center" }}>
-              <div className="hero-stat-val">$84k</div>
+              <div className="hero-stat-val">${fmtNum(stats.activeBounties)}</div>
               <div className="hero-stat-label">Active bounties</div>
             </div>
             <div style={{ textAlign: "center" }}>
-              <div className="hero-stat-val">342</div>
+              <div className="hero-stat-val">{stats.solved.toLocaleString()}</div>
               <div className="hero-stat-label">Solved</div>
             </div>
           </div>
@@ -557,11 +496,7 @@ function BrowsePage({ problems, setPage, votes, onVote, initialIndustry }) {
 
 function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solutions }) {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([
-    { id: 1, author: "Sarah K.", time: "2 days ago", text: "This is exactly the problem I face every month. The lack of transparency is intentional \u2014 hospitals profit from confusion." },
-    { id: 2, author: "James O.", time: "5 days ago", text: "I built a basic spreadsheet tool to parse EOBs. Happy to share. But a real solution needs to integrate with insurance APIs." },
-    { id: 3, author: "Priya M.", time: "1 week ago", text: "Similar problem in India but with private hospital billing. Would a US-focused solution be adaptable here?" },
-  ]);
+  const [comments, setComments] = useState([]);
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
   const sb = statusBadge(problem.status);
@@ -637,7 +572,9 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
           <div className="card" style={{ padding: "20px" }}>
             <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 16 }}>Community discussion ({comments.length})</div>
             <div>
-              {comments.map(c => (
+              {comments.length === 0 ? (
+                <div style={{ fontSize: 13, color: "var(--text3)", marginBottom: 10 }}>No comments yet. Start the discussion.</div>
+              ) : comments.map(c => (
                 <div key={c.id} className="comment">
                   <Avatar name={c.author} color="purple" />
                   <div className="comment-body">
@@ -853,10 +790,22 @@ function PostPage({ onSubmit }) {
   );
 }
 
-function DashboardPage({ problems, solutions, setPage }) {
+function DashboardPage({ problems, solutions, setPage, currentUser }) {
   const [tab, setTab] = useState("overview");
-  const myProblems = problems.filter(p => p.posterId === 1);
-  const mySolutions = solutions;
+  const currentUserId = currentUser?.id || null;
+  const currentUserEmail = currentUser?.email || "You";
+  const myProblems = problems.filter(p => String(p.posterId) === String(currentUserId));
+  const mySolutions = solutions.filter(s => String(s.builderId) === String(currentUserId));
+  const builderScore = mySolutions.reduce((sum, solution) => sum + Math.round(solution.progress * 10), 0);
+  const bountyEarned = mySolutions.reduce((sum, solution) => sum + solution.bountyEarned, 0);
+  const solutionsShipped = mySolutions.filter(s => ["shipped", "launched", "completed"].includes(String(s.status).toLowerCase())).length;
+  const recentActivity = [...problems]
+    .sort((a, b) => new Date(b.posted) - new Date(a.posted))
+    .slice(0, 5)
+    .map(problem => ({
+      text: `New problem posted: ${problem.title}`,
+      time: timeAgo(problem.posted),
+    }));
 
   return (
     <div className="page">
@@ -865,13 +814,13 @@ function DashboardPage({ problems, solutions, setPage }) {
           <Avatar name="You" size="lg" color="accent" />
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 22 }}>Your dashboard</div>
-            <div style={{ fontSize: 12, color: "var(--text3)" }}>Builder Â· Poster Â· Member since Nov 2025</div>
+            <div style={{ fontSize: 12, color: "var(--text3)" }}>Builder Â· Poster Â· {currentUserEmail}</div>
           </div>
         </div>
       </div>
 
       <div className="grid-4" style={{ marginBottom: 24 }}>
-        {[["Problems posted", myProblems.length, "var(--accent)"], ["Builder score", "1,840", "var(--teal)"], ["Bounties earned", "$2,200", "var(--amber)"], ["Solutions shipped", mySolutions.filter(s => s.status === "shipped").length || 0, "var(--purple)"]].map(([label, val, color]) => (
+        {[["Problems posted", myProblems.length, "var(--accent)"], ["Builder score", builderScore, "var(--teal)"], ["Bounties earned", `$${bountyEarned.toLocaleString()}`, "var(--amber)"], ["Solutions shipped", solutionsShipped, "var(--purple)"]].map(([label, val, color]) => (
           <div key={label} className="stat-card">
             <div className="stat-label">{label}</div>
             <div className="stat-value" style={{ color }}>{val}</div>
@@ -890,7 +839,7 @@ function DashboardPage({ problems, solutions, setPage }) {
           <div>
             <div className="section-title" style={{ marginBottom: 12 }}>Reputation</div>
             <div className="card" style={{ padding: 20 }}>
-              {[["Poster score", 420, 1000, "var(--accent)"], ["Builder score", 1840, 5000, "var(--teal)"], ["Community trust", 72, 100, "var(--purple)"]].map(([label, val, max, color]) => (
+              {[["Poster score", myProblems.reduce((sum, p) => sum + Math.round((p.score || 0) * 100), 0), 5000, "var(--accent)"], ["Builder score", builderScore, 5000, "var(--teal)"], ["Community trust", Math.min(100, myProblems.length * 10 + mySolutions.length * 12), 100, "var(--purple)"]].map(([label, val, max, color]) => (
                 <div key={label} style={{ marginBottom: 14 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 4 }}>
                     <span style={{ fontWeight: 500 }}>{label}</span>
@@ -905,7 +854,9 @@ function DashboardPage({ problems, solutions, setPage }) {
           </div>
           <div>
             <div className="section-title" style={{ marginBottom: 12 }}>Active build</div>
-            {mySolutions.map(s => (
+            {mySolutions.length === 0 ? (
+              <div className="card" style={{ padding: 20, fontSize: 13, color: "var(--text3)" }}>No active builds yet.</div>
+            ) : mySolutions.map(s => (
               <div key={s.id} className="card" style={{ padding: 20 }}>
                 <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{s.title}</div>
                 <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 14 }}>{s.description}</div>
@@ -982,14 +933,10 @@ function DashboardPage({ problems, solutions, setPage }) {
 
       {tab === "notifications" && (
         <div className="card" style={{ padding: 20 }}>
-          {[
-            { text: "Your problem 'Freelancers chasing invoices' received 12 new votes", time: "2h ago", type: "vote" },
-            { text: "New builder claimed your problem 'Hospital billing transparency'", time: "1d ago", type: "builder" },
-            { text: "Someone added a 'me too' to your medication tracking problem", time: "2d ago", type: "metoo" },
-            { text: "Your solution 'InvoiceHound' was featured in the weekly digest", time: "3d ago", type: "feature" },
-            { text: "New comment on 'Hospital billing is completely opaque'", time: "4d ago", type: "comment" },
-          ].map((n, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 0", borderBottom: i < 4 ? "1px solid var(--border)" : "none" }}>
+          {recentActivity.length === 0 ? (
+            <div style={{ fontSize: 13, color: "var(--text3)" }}>No activity yet.</div>
+          ) : recentActivity.map((n, i) => (
+            <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 0", borderBottom: i < recentActivity.length - 1 ? "1px solid var(--border)" : "none" }}>
               <div className="notif-dot" style={{ marginTop: 5 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13 }}>{n.text}</div>
@@ -1003,21 +950,40 @@ function DashboardPage({ problems, solutions, setPage }) {
   );
 }
 
-function LeaderboardPage({ problems }) {
-  const topPosters = [
-    { name: "Alex T.", score: 4420, problems: 18, meToo: 14200 },
-    { name: "Sarah K.", score: 3890, problems: 12, meToo: 9800 },
-    { name: "Priya M.", score: 2710, problems: 9, meToo: 6500 },
-    { name: "You", score: 420, problems: 4, meToo: 1200 },
-    { name: "Dana L.", score: 390, problems: 3, meToo: 980 },
-  ];
-  const topBuilders = [
-    { name: "Jamie C.", score: 8200, shipped: 5, bountyEarned: 18500 },
-    { name: "Riya B.", score: 6100, shipped: 3, bountyEarned: 9200 },
-    { name: "Tom W.", score: 4800, shipped: 4, bountyEarned: 7400 },
-    { name: "You", score: 1840, shipped: 1, bountyEarned: 2200 },
-    { name: "Mira S.", score: 1200, shipped: 1, bountyEarned: 1500 },
-  ];
+function LeaderboardPage({ problems, solutions, currentUser }) {
+  const currentUserName = currentUser?.email || "You";
+
+  const topPosters = Object.values(
+    problems.reduce((acc, problem) => {
+      const key = problem.posterName || "Anonymous";
+      if (!acc[key]) {
+        acc[key] = { name: key, score: 0, problems: 0, meToo: 0 };
+      }
+      acc[key].score += Math.round((problem.score || 0) * 100);
+      acc[key].problems += 1;
+      acc[key].meToo += problem.meToo || 0;
+      return acc;
+    }, {})
+  )
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+
+  const topBuilders = Object.values(
+    solutions.reduce((acc, solution) => {
+      const key = solution.builder || "Builder";
+      if (!acc[key]) {
+        acc[key] = { name: key, score: 0, shipped: 0, bountyEarned: 0 };
+      }
+      acc[key].score += Math.round((solution.progress || 0) * 10);
+      if (["shipped", "launched", "completed"].includes(String(solution.status).toLowerCase())) {
+        acc[key].shipped += 1;
+      }
+      acc[key].bountyEarned += solution.bountyEarned || 0;
+      return acc;
+    }, {})
+  )
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 
   return (
     <div className="page">
@@ -1028,11 +994,13 @@ function LeaderboardPage({ problems }) {
         <div>
           <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>ðŸ† Top problem posters</div>
           <div className="card" style={{ padding: "8px 20px" }}>
-            {topPosters.map((u, i) => (
-              <div key={u.name} className="lb-row" style={u.name === "You" ? { background: "var(--accent-bg)", margin: "0 -20px", padding: "10px 20px" } : {}}>
+            {topPosters.length === 0 ? (
+              <div style={{ padding: "12px 0", fontSize: 13, color: "var(--text3)" }}>No poster data yet.</div>
+            ) : topPosters.map((u, i) => (
+              <div key={u.name} className="lb-row" style={u.name === currentUserName ? { background: "var(--accent-bg)", margin: "0 -20px", padding: "10px 20px" } : {}}>
                 <div className="lb-rank" style={{ color: i < 3 ? ["#f59e0b", "#94a3b8", "#cd7c2f"][i] : "var(--text3)" }}>#{i + 1}</div>
                 <Avatar name={u.name} color={["accent", "teal", "purple", "accent", "teal"][i]} />
-                <div className="lb-name">{u.name}{u.name === "You" && <span className="badge badge-gray" style={{ marginLeft: 8, fontSize: 10 }}>you</span>}</div>
+                <div className="lb-name">{u.name}{u.name === currentUserName && <span className="badge badge-gray" style={{ marginLeft: 8, fontSize: 10 }}>you</span>}</div>
                 <div style={{ fontSize: 12, color: "var(--text2)" }}>{u.problems} problems</div>
                 <div className="lb-score">{u.score.toLocaleString()}</div>
               </div>
@@ -1042,11 +1010,13 @@ function LeaderboardPage({ problems }) {
         <div>
           <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>ðŸ”§ Top builders</div>
           <div className="card" style={{ padding: "8px 20px" }}>
-            {topBuilders.map((u, i) => (
-              <div key={u.name} className="lb-row" style={u.name === "You" ? { background: "var(--accent-bg)", margin: "0 -20px", padding: "10px 20px" } : {}}>
+            {topBuilders.length === 0 ? (
+              <div style={{ padding: "12px 0", fontSize: 13, color: "var(--text3)" }}>No builder data yet.</div>
+            ) : topBuilders.map((u, i) => (
+              <div key={u.name} className="lb-row" style={u.name === currentUserName ? { background: "var(--accent-bg)", margin: "0 -20px", padding: "10px 20px" } : {}}>
                 <div className="lb-rank" style={{ color: i < 3 ? ["#f59e0b", "#94a3b8", "#cd7c2f"][i] : "var(--text3)" }}>#{i + 1}</div>
                 <Avatar name={u.name} color={["teal", "purple", "accent", "accent", "teal"][i]} />
-                <div className="lb-name">{u.name}{u.name === "You" && <span className="badge badge-gray" style={{ marginLeft: 8, fontSize: 10 }}>you</span>}</div>
+                <div className="lb-name">{u.name}{u.name === currentUserName && <span className="badge badge-gray" style={{ marginLeft: 8, fontSize: 10 }}>you</span>}</div>
                 <div style={{ fontSize: 12, color: "var(--text2)" }}>${u.bountyEarned.toLocaleString()}</div>
                 <div className="lb-score" style={{ color: "var(--teal)" }}>{u.score.toLocaleString()}</div>
               </div>
@@ -1082,20 +1052,32 @@ function LeaderboardPage({ problems }) {
 export default function App() {
   const [page, setPage] = useState("home");
   const [problems, setProblems] = useState([]);
-  const [solutions] = useState(SEED_SOLUTIONS);
+  const [solutions, setSolutions] = useState([]);
   const [votes, setVotes] = useState([]);
   const [meToos, setMeToos] = useState([]);
   const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
+  const homeStats = useMemo(() => {
+    const problemsPosted = problems.length;
+    const beingBuilt = problems.filter(problem => problem.status === "being_built").length;
+    const solved = problems.filter(problem => problem.status === "solved").length;
+    const activeBounties = problems
+      .filter(problem => problem.status !== "solved")
+      .reduce((sum, problem) => sum + (problem.bounty || 0), 0);
+
+    return { problemsPosted, beingBuilt, activeBounties, solved };
+  }, [problems]);
+
   useEffect(() => {
     let isMounted = true;
 
     async function bootstrap() {
       setLoading(true);
-      const [{ data, error }, { data: userData }] = await Promise.all([
+      const [{ data, error }, { data: solutionsData, error: solutionsError }, { data: userData }] = await Promise.all([
         supabase.from("problems").select("*").order("score", { ascending: false }),
+        supabase.from("solutions").select("*"),
         supabase.auth.getUser(),
       ]);
 
@@ -1105,6 +1087,10 @@ export default function App() {
         showToast("Failed to load problems");
       } else {
         setProblems((data || []).map(normalizeProblem));
+      }
+
+      if (!solutionsError) {
+        setSolutions((solutionsData || []).map(normalizeSolution));
       }
 
       setUser(userData?.user || null);
@@ -1153,6 +1139,12 @@ export default function App() {
     setProblems((data || []).map(normalizeProblem));
   }
 
+  async function loadSolutions() {
+    const { data, error } = await supabase.from("solutions").select("*");
+    if (error) return;
+    setSolutions((data || []).map(normalizeSolution));
+  }
+
   async function onPostProblem(form) {
     const { data: { user: currentUser } } = await supabase.auth.getUser();
     if (!currentUser) {
@@ -1179,7 +1171,7 @@ export default function App() {
       return false;
     }
 
-    await loadProblems();
+    await Promise.all([loadProblems(), loadSolutions()]);
     setPage("browse");
     showToast("Problem published! ðŸŽ‰");
     return true;
@@ -1219,11 +1211,11 @@ export default function App() {
   const activePage = typeof page === "object" ? page.name : page;
 
   let content = null;
-  if (activePage === "home") content = <HomePage setPage={setPage} problems={problems} />;
+  if (activePage === "home") content = <HomePage setPage={setPage} problems={problems} stats={homeStats} />;
   else if (activePage === "browse") content = <BrowsePage problems={problems} setPage={setPage} votes={votes} onVote={onVote} initialIndustry={typeof page === "object" ? page.industry : null} />;
   else if (activePage === "post") content = <PostPage onSubmit={onPostProblem} />;
-  else if (activePage === "dashboard") content = <DashboardPage problems={problems} solutions={solutions} setPage={setPage} />;
-  else if (activePage === "leaderboard") content = <LeaderboardPage problems={problems} />;
+  else if (activePage === "dashboard") content = <DashboardPage problems={problems} solutions={solutions} setPage={setPage} currentUser={user} />;
+  else if (activePage === "leaderboard") content = <LeaderboardPage problems={problems} solutions={solutions} currentUser={user} />;
   else if (activePage === "detail") {
     const prob = problems.find(p => p.id === page.id);
     if (prob) content = <DetailPage problem={prob} setPage={setPage} votes={votes} onVote={onVote} onMeToo={onMeToo} meToos={meToos} solutions={solutions} />;
