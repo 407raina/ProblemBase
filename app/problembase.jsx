@@ -11,7 +11,7 @@ const STATUSES = ["open", "being_built", "solved"];
 
 const SEED_PROBLEMS = [
   {
-    id: 1, title: "Hospital billing is completely opaque â€” patients can't understand their charges",
+    id: 1, title: "Hospital billing is completely opaque \u2014 patients can't understand their charges",
     description: "After any medical visit, patients receive bills weeks later with cryptic codes, no itemization, and no way to verify accuracy. The system is designed to confuse. I've been overbilled three times and had to fight each time.",
     who: "Patients, uninsured adults, low-income families", industry: "Healthcare", region: "USA",
     severity: 9, frequency: "Daily", meToo: 2341, votes: 4102, bounty: 5000, status: "being_built",
@@ -60,7 +60,7 @@ const SEED_PROBLEMS = [
   },
   {
     id: 7, title: "Small law firms can't afford eDiscovery tools built for BigLaw",
-    description: "The cheapest eDiscovery platforms start at $5,000/month. I represent individuals and small businesses â€” my whole firm runs on $8k/month revenue. I'm stuck reviewing documents manually and it kills my margins.",
+    description: "The cheapest eDiscovery platforms start at $5,000/month. I represent individuals and small businesses \u2014 my whole firm runs on $8k/month revenue. I'm stuck reviewing documents manually and it kills my margins.",
     who: "Solo attorneys, small law firms (1â€“5 attorneys)", industry: "Legal", region: "USA",
     severity: 8, frequency: "Monthly", meToo: 320, votes: 680, bounty: 10000, status: "open",
     buildersCount: 2, score: 8.0, posted: "2026-02-28", posterName: "Dana L.", posterId: 8,
@@ -421,7 +421,7 @@ function HomePage({ setPage, problems }) {
           <h1 className="hero-title">Real problems.<br /><em>Real opportunities.</em></h1>
           <p className="hero-sub">Post the frustrations you face every day. Discover them as validated startup ideas. Build solutions people actually need.</p>
           <div className="hero-actions">
-            <button className="btn btn-primary" onClick={() => setPage("post")} style={{ padding: "10px 24px", fontSize: 15 }}>Post a problem â†’</button>
+            <button className="btn btn-primary" onClick={() => setPage("post")} style={{ padding: "10px 24px", fontSize: 15 }}>Post a problem {"\u2192"}</button>
             <button className="btn btn-secondary" onClick={() => setPage("browse")} style={{ padding: "10px 24px", fontSize: 15 }}>Browse problems</button>
           </div>
           <div className="hero-stats">
@@ -451,7 +451,7 @@ function HomePage({ setPage, problems }) {
             <div className="section-title">Trending problems</div>
             <div className="section-sub">Highest-scored unsolved opportunities right now</div>
           </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => setPage("browse")}>View all â†’</button>
+          <button className="btn btn-secondary btn-sm" onClick={() => setPage("browse")}>View all {"\u2192"}</button>
         </div>
         <div className="scroll-list">
           {problems.slice(0, 4).map(p => (
@@ -520,7 +520,7 @@ function BrowsePage({ problems, setPage, votes, onVote, initialIndustry }) {
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <div className="search-wrap">
             <span className="search-icon">ðŸ”</span>
-            <input className="search-input" placeholder="Search problemsâ€¦" value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="search-input" placeholder="Search problems\u2026" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="score">By score</option>
@@ -559,7 +559,7 @@ function BrowsePage({ problems, setPage, votes, onVote, initialIndustry }) {
 function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solutions }) {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([
-    { id: 1, author: "Sarah K.", time: "2 days ago", text: "This is exactly the problem I face every month. The lack of transparency is intentional â€” hospitals profit from confusion." },
+    { id: 1, author: "Sarah K.", time: "2 days ago", text: "This is exactly the problem I face every month. The lack of transparency is intentional \u2014 hospitals profit from confusion." },
     { id: 2, author: "James O.", time: "5 days ago", text: "I built a basic spreadsheet tool to parse EOBs. Happy to share. But a real solution needs to integrate with insurance APIs." },
     { id: 3, author: "Priya M.", time: "1 week ago", text: "Similar problem in India but with private hospital billing. Would a US-focused solution be adaptable here?" },
   ]);
@@ -654,7 +654,7 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
             <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
               <Avatar name="You" color="accent" />
               <div style={{ flex: 1 }}>
-                <textarea className="form-input form-textarea" style={{ minHeight: 72 }} placeholder="Add context, examples, or your experienceâ€¦" value={comment} onChange={e => setComment(e.target.value)} />
+                <textarea className="form-input form-textarea" style={{ minHeight: 72 }} placeholder="Add context, examples, or your experience\u2026" value={comment} onChange={e => setComment(e.target.value)} />
                 <button className="btn btn-primary btn-sm" style={{ marginTop: 8 }} onClick={() => {
                   if (!comment.trim()) return;
                   setComments(prev => [...prev, { id: Date.now(), author: "You", time: "just now", text: comment }]);
@@ -674,10 +674,10 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
               {!claimed ? (
                 <button className="btn btn-primary" style={{ width: "100%", justifyContent: "center", background: "var(--amber)" }}
                   onClick={() => { setClaiming(true); setTimeout(() => { setClaimed(true); setClaiming(false); }, 800); }}>
-                  {claiming ? "Claimingâ€¦" : "Claim this bounty â†’"}
+                  {claiming ? "Claiming\u2026" : "Claim this bounty \u2192"}
                 </button>
               ) : (
-                <div className="badge badge-green" style={{ fontSize: 12 }}>âœ“ Bounty claimed â€” start building!</div>
+                <div className="badge badge-green" style={{ fontSize: 12 }}>{"\u2713"} Bounty claimed {"\u2014"} start building!</div>
               )}
             </div>
           )}
@@ -701,7 +701,7 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
             ) : (
               <div style={{ fontSize: 13, color: "var(--text2)", marginBottom: 12 }}>{problem.buildersCount} builder{problem.buildersCount > 1 ? "s" : ""} working on this</div>
             )}
-            {!claimed && <button className="btn btn-teal" style={{ width: "100%", justifyContent: "center" }} onClick={() => setPage({ name: "post-solution", id: problem.id })}>Start building â†’</button>}
+            {!claimed && <button className="btn btn-teal" style={{ width: "100%", justifyContent: "center" }} onClick={() => setPage({ name: "post-solution", id: problem.id })}>Start building {"\u2192"}</button>}
           </div>
 
           <div className="card sidebar-card">
@@ -764,7 +764,7 @@ function PostPage({ onSubmit }) {
     <div className="page" style={{ maxWidth: 640, margin: "0 auto" }}>
       <div style={{ marginBottom: 24 }}>
         <div className="section-title">Post a problem</div>
-        <div className="section-sub">Describe a real frustration you face. Be specific â€” the more concrete, the more valuable.</div>
+        <div className="section-sub">Describe a real frustration you face. Be specific {"\u2014"} the more concrete, the more valuable.</div>
         <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
           {[1, 2, 3].map(s => (
             <div key={s} style={{ height: 4, flex: 1, borderRadius: 2, background: s <= step ? "var(--accent)" : "var(--border)", transition: "background 0.2s" }} />
@@ -789,7 +789,7 @@ function PostPage({ onSubmit }) {
             <label className="form-label">Who faces this problem? *</label>
             <input className="form-input" placeholder="e.g. Freelance designers and independent consultants" value={form.who} onChange={e => update("who", e.target.value)} />
           </div>
-          <button className="btn btn-primary" onClick={() => form.title && form.description && form.who && setStep(2)} style={{ marginTop: 8 }}>Continue â†’</button>
+          <button className="btn btn-primary" onClick={() => form.title && form.description && form.who && setStep(2)} style={{ marginTop: 8 }}>Continue {"\u2192"}</button>
         </>}
 
         {step === 2 && <>
@@ -824,7 +824,7 @@ function PostPage({ onSubmit }) {
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button className="btn btn-secondary" onClick={() => setStep(1)}>â† Back</button>
-            <button className="btn btn-primary" onClick={() => setStep(3)}>Continue â†’</button>
+            <button className="btn btn-primary" onClick={() => setStep(3)}>Continue {"\u2192"}</button>
           </div>
         </>}
 
@@ -835,7 +835,7 @@ function PostPage({ onSubmit }) {
           </div>
           <div className="form-group">
             <label className="form-label">Bounty amount (USD)</label>
-            <input className="form-input" type="number" placeholder="0 â€” leave blank for no bounty" value={form.bounty} onChange={e => update("bounty", e.target.value)} />
+            <input className="form-input" type="number" placeholder="0 \u2014 leave blank for no bounty" value={form.bounty} onChange={e => update("bounty", e.target.value)} />
           </div>
           <div className="divider" />
           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Review your problem</div>
@@ -846,7 +846,7 @@ function PostPage({ onSubmit }) {
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button className="btn btn-secondary" onClick={() => setStep(2)}>â† Back</button>
-            <button className="btn btn-primary" onClick={handleSubmit} style={{ flex: 1, justifyContent: "center" }} disabled={posting}>{posting ? "Publishingâ€¦" : "Publish problem â†’"}</button>
+            <button className="btn btn-primary" onClick={handleSubmit} style={{ flex: 1, justifyContent: "center" }} disabled={posting}>{posting ? "Publishing\u2026" : "Publish problem \u2192"}</button>
           </div>
         </>}
       </div>
@@ -914,7 +914,7 @@ function DashboardPage({ problems, solutions, setPage }) {
                   <div className="progress-fill" style={{ width: `${s.progress}%` }} />
                 </div>
                 <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 14 }}>{s.progress}% complete Â· {s.teamSize} team members Â· Beta in {s.launchIn}</div>
-                <button className="btn btn-secondary btn-sm" onClick={() => setPage({ name: "detail", id: s.problemId })}>View problem â†’</button>
+                <button className="btn btn-secondary btn-sm" onClick={() => setPage({ name: "detail", id: s.problemId })}>View problem {"\u2192"}</button>
               </div>
             ))}
           </div>
@@ -1265,7 +1265,7 @@ export default function App() {
           {loading ? (
             <div className="page">
               <div className="empty">
-                <div className="empty-title">Loading problemsâ€¦</div>
+                <div className="empty-title">Loading problems{"\u2026"}</div>
                 <p>Fetching live data from Supabase.</p>
               </div>
             </div>
