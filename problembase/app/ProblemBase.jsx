@@ -1008,7 +1008,7 @@ function LeaderboardPage({ problems, solutions, currentUser }) {
           </div>
         </div>
         <div>
-          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>ðŸ”§ Top builders</div>
+          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>Top builders</div>
           <div className="card" style={{ padding: "8px 20px" }}>
             {topBuilders.length === 0 ? (
               <div style={{ padding: "12px 0", fontSize: 13, color: "var(--text3)" }}>No builder data yet.</div>
