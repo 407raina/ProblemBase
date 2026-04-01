@@ -1,1 +1,1 @@
-export { default } from "../problembase/app/ProblemBase";
+export { default } from "./ProblemBase";

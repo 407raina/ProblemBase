@@ -1,12 +1,12 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 
 const INDUSTRIES = ["All", "Healthcare", "Fintech", "SMB", "Education", "Logistics", "HR & Hiring", "Legal", "Real Estate", "Climate"];
 const FREQUENCIES = ["Daily", "Weekly", "Monthly", "Occasionally"];
-const STATUSES = ["open", "being_built", "solved"];
 
 // â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -326,7 +326,7 @@ function ProblemCard({ problem, onClick, voted, onVote }) {
         <span className="problem-meta-sep">Â·</span>
         <span>{problem.region}</span>
         <span className="problem-meta-sep">Â·</span>
-        <span>{fmtNum(problem.meToo)} "me too"</span>
+        <span>{fmtNum(problem.meToo)} &quot;me too&quot;</span>
         <span className="problem-meta-sep">Â·</span>
         <span>{timeAgo(problem.posted)}</span>
       </div>
@@ -403,7 +403,7 @@ function HomePage({ setPage, problems, stats }) {
               </div>
               <div className="problem-meta">
                 <span>{p.industry}</span><span className="problem-meta-sep">Â·</span>
-                <span>{fmtNum(p.meToo)} "me too"</span><span className="problem-meta-sep">Â·</span>
+                <span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep">Â·</span>
                 <span>{timeAgo(p.posted)}</span>
               </div>
               <div className="problem-footer">
@@ -463,7 +463,7 @@ function BrowsePage({ problems, setPage, votes, onVote, initialIndustry }) {
           <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="score">By score</option>
             <option value="votes">By votes</option>
-            <option value="metoo">By "me too"</option>
+            <option value="metoo">By &quot;me too&quot;</option>
             <option value="newest">Newest</option>
           </select>
         </div>
@@ -657,7 +657,7 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
   );
 }
 
-function PostPage({ onSubmit }) {
+function PostPage({ onSubmit, onBrowse }) {
   const [form, setForm] = useState({ title: "", description: "", who: "", severity: 7, frequency: "Daily", industry: "Healthcare", region: "", bounty: "", tags: "" });
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
@@ -690,7 +690,7 @@ function PostPage({ onSubmit }) {
         <div style={{ fontSize: 14, color: "var(--text2)", marginBottom: 24, lineHeight: 1.7 }}>Your problem is now live and searchable. The community will start validating it, and builders will discover it through the feed and weekly digest.</div>
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
           <button className="btn btn-primary" onClick={() => setSubmitted(false)}>Post another</button>
-          <button className="btn btn-secondary" onClick={() => window.dispatchEvent(new CustomEvent("nav", { detail: "browse" }))}>Browse problems</button>
+          <button className="btn btn-secondary" onClick={onBrowse}>Browse problems</button>
         </div>
       </div>
     </div>
@@ -886,7 +886,7 @@ function DashboardPage({ problems, solutions, setPage, currentUser }) {
                       <div className="score-label">score</div>
                     </div>
                   </div>
-                  <div className="problem-meta"><span>{fmtNum(p.meToo)} "me too"</span><span className="problem-meta-sep">Â·</span><span>{fmtNum(p.votes)} votes</span><span className="problem-meta-sep">Â·</span><span>{p.comments} comments</span></div>
+                  <div className="problem-meta"><span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep">Â·</span><span>{fmtNum(p.votes)} votes</span><span className="problem-meta-sep">Â·</span><span>{p.comments} comments</span></div>
                   <div className="problem-footer">
                     <span className="badge" style={{ background: statusBadge(p.status).bg, color: statusBadge(p.status).color }}>{statusBadge(p.status).label}</span>
                     {p.bounty > 0 && <span className="bounty-tag">ðŸ’° ${p.bounty.toLocaleString()}</span>}
@@ -1034,7 +1034,7 @@ function LeaderboardPage({ problems, solutions, currentUser }) {
             <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text3)", width: 28 }}>#{i + 1}</div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{p.title}</div>
-              <div style={{ fontSize: 12, color: "var(--text2)" }}>{p.industry} Â· {fmtNum(p.meToo)} "me too"s</div>
+              <div style={{ fontSize: 12, color: "var(--text2)" }}>{p.industry} Â· {fmtNum(p.meToo)} &quot;me too&quot;s</div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 22, fontWeight: 800, color: scoreColor(p.score) }}>{p.score}</div>
@@ -1047,9 +1047,9 @@ function LeaderboardPage({ problems, solutions, currentUser }) {
   );
 }
 
-// â”€â”€â”€ App â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
+//App 
 export default function App() {
+  const router = useRouter();
   const [page, setPage] = useState("home");
   const [problems, setProblems] = useState([]);
   const [solutions, setSolutions] = useState([]);
@@ -1058,6 +1058,11 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2400);
+  }
 
   const homeStats = useMemo(() => {
     const problemsPosted = problems.length;
@@ -1110,19 +1115,16 @@ export default function App() {
     };
   }, []);
 
-  function showToast(msg) {
-    setToast(msg);
-    setTimeout(() => setToast(null), 2400);
-  }
-
   function onVote(id) {
-    setVotes(v => v.includes(id) ? v.filter(x => x !== id) : [...v, id]);
-    showToast(votes.includes(id) ? "Vote removed" : "Voted! ðŸ‘");
+    const wasVoted = votes.includes(id);
+    setVotes((currentVotes) => (currentVotes.includes(id) ? currentVotes.filter((x) => x !== id) : [...currentVotes, id]));
+    showToast(wasVoted ? "Vote removed" : "Voted!");
   }
 
   function onMeToo(id) {
-    setMeToos(v => v.includes(id) ? v.filter(x => x !== id) : [...v, id]);
-    showToast(meToos.includes(id) ? "Removed" : "\"Me too\" added ðŸ‘‹");
+    const wasMarked = meToos.includes(id);
+    setMeToos((currentMeToos) => (currentMeToos.includes(id) ? currentMeToos.filter((x) => x !== id) : [...currentMeToos, id]));
+    showToast(wasMarked ? "Removed" : '"Me too" added');
   }
 
   async function loadProblems() {
@@ -1177,24 +1179,6 @@ export default function App() {
     return true;
   }
 
-  async function handleSignUp() {
-    const email = window.prompt("Email for sign up:");
-    const password = window.prompt("Password (min 6 chars):");
-    if (!email || !password) return;
-
-    const { error } = await supabase.auth.signUp({ email, password });
-    showToast(error ? error.message : "Sign-up successful. Check your email if confirmation is enabled.");
-  }
-
-  async function handleSignIn() {
-    const email = window.prompt("Email:");
-    const password = window.prompt("Password:");
-    if (!email || !password) return;
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    showToast(error ? error.message : "Signed in");
-  }
-
   async function handleSignOut() {
     await supabase.auth.signOut();
     showToast("Signed out");
@@ -1213,7 +1197,7 @@ export default function App() {
   let content = null;
   if (activePage === "home") content = <HomePage setPage={setPage} problems={problems} stats={homeStats} />;
   else if (activePage === "browse") content = <BrowsePage problems={problems} setPage={setPage} votes={votes} onVote={onVote} initialIndustry={typeof page === "object" ? page.industry : null} />;
-  else if (activePage === "post") content = <PostPage onSubmit={onPostProblem} />;
+  else if (activePage === "post") content = <PostPage onSubmit={onPostProblem} onBrowse={() => setPage("browse")} />;
   else if (activePage === "dashboard") content = <DashboardPage problems={problems} solutions={solutions} setPage={setPage} currentUser={user} />;
   else if (activePage === "leaderboard") content = <LeaderboardPage problems={problems} solutions={solutions} currentUser={user} />;
   else if (activePage === "detail") {
@@ -1245,8 +1229,8 @@ export default function App() {
                 </>
               ) : (
                 <>
-                  <button className="btn btn-secondary btn-sm" onClick={handleSignIn}>Sign in</button>
-                  <button className="btn btn-secondary btn-sm" onClick={handleSignUp}>Sign up</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => router.push("/signin")}>Sign in</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => router.push("/signup")}>Sign up</button>
                 </>
               )}
             </div>
