@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 const INDUSTRIES = ["All", "Healthcare", "Fintech", "SMB", "Education", "Logistics", "HR & Hiring", "Legal", "Real Estate", "Climate"];
 const FREQUENCIES = ["Daily", "Weekly", "Monthly", "Occasionally"];
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Helpers 
 
 function scoreColor(s) {
   if (s >= 8.5) return "#e84040";
@@ -68,7 +68,7 @@ function normalizeSolution(solution) {
   };
 }
 
-// â”€â”€â”€ Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Styles 
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
@@ -293,7 +293,7 @@ const css = `
   }
 `;
 
-// â”€â”€â”€ Components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Components 
 
 function SeverityBar({ value }) {
   return (
@@ -323,22 +323,22 @@ function ProblemCard({ problem, onClick, voted, onVote }) {
       </div>
       <div className="problem-meta">
         <span>{problem.industry}</span>
-        <span className="problem-meta-sep">Â·</span>
+        <span className="problem-meta-sep"></span>
         <span>{problem.region}</span>
-        <span className="problem-meta-sep">Â·</span>
+        <span className="problem-meta-sep"></span>
         <span>{fmtNum(problem.meToo)} &quot;me too&quot;</span>
-        <span className="problem-meta-sep">Â·</span>
+        <span className="problem-meta-sep"></span>
         <span>{timeAgo(problem.posted)}</span>
       </div>
       <div className="problem-footer">
         <span className="badge" style={{ background: sb.bg, color: sb.color }}>{sb.label}</span>
         {problem.severity >= 8 && <span className="badge badge-red">High severity</span>}
-        {problem.bounty > 0 && <span className="bounty-tag">ðŸ’° ${problem.bounty.toLocaleString()} bounty</span>}
+        {problem.bounty > 0 && <span className="bounty-tag"> ${problem.bounty.toLocaleString()} bounty</span>}
         {problem.buildersCount > 0 && <span className="badge badge-teal">{problem.buildersCount} builder{problem.buildersCount > 1 ? "s" : ""}</span>}
         <span className="badge badge-gray">{problem.frequency}</span>
         <div style={{ marginLeft: "auto" }}>
           <div className={`vote-btn${voted ? " voted" : ""}`} onClick={e => { e.stopPropagation(); onVote(problem.id); }}>
-            <span style={{ fontSize: 14 }}>â–²</span>
+            <span style={{ fontSize: 14 }}></span>
             <span className="vote-count" style={{ color: voted ? "var(--accent)" : "var(--text)" }}>{fmtNum(problem.votes + (voted ? 1 : 0))}</span>
             <span className="vote-label">votes</span>
           </div>
@@ -348,7 +348,7 @@ function ProblemCard({ problem, onClick, voted, onVote }) {
   );
 }
 
-// â”€â”€â”€ Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Pages 
 
 function HomePage({ setPage, problems, stats }) {
   return (
@@ -402,13 +402,13 @@ function HomePage({ setPage, problems, stats }) {
                 </div>
               </div>
               <div className="problem-meta">
-                <span>{p.industry}</span><span className="problem-meta-sep">Â·</span>
-                <span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep">Â·</span>
+                <span>{p.industry}</span><span className="problem-meta-sep"></span>
+                <span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep"></span>
                 <span>{timeAgo(p.posted)}</span>
               </div>
               <div className="problem-footer">
                 <span className="badge" style={{ background: statusBadge(p.status).bg, color: statusBadge(p.status).color }}>{statusBadge(p.status).label}</span>
-                {p.bounty > 0 && <span className="bounty-tag">ðŸ’° ${p.bounty.toLocaleString()}</span>}
+                {p.bounty > 0 && <span className="bounty-tag"> ${p.bounty.toLocaleString()}</span>}
                 {p.buildersCount > 0 && <span className="badge badge-teal">{p.buildersCount} builder{p.buildersCount > 1 ? "s" : ""}</span>}
               </div>
             </div>
@@ -457,7 +457,7 @@ function BrowsePage({ problems, setPage, votes, onVote, initialIndustry }) {
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <div className="search-wrap">
-            <span className="search-icon">ðŸ”</span>
+            <span className="search-icon"></span>
             <input className="search-input" placeholder="Search problems\u2026" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
@@ -507,7 +507,7 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
   return (
     <div className="page">
       <div style={{ marginBottom: 20 }}>
-        <button className="btn btn-ghost btn-sm" onClick={() => setPage("browse")}>â† Back to problems</button>
+        <button className="btn btn-ghost btn-sm" onClick={() => setPage("browse")}> Back to problems</button>
       </div>
 
       <div className="detail-layout">
@@ -524,12 +524,12 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
 
             <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
               <div className={`vote-btn${didVote ? " voted" : ""}`} onClick={() => onVote(problem.id)} style={{ flexDirection: "row", gap: 8 }}>
-                <span>â–²</span>
+                <span></span>
                 <span style={{ fontWeight: 700 }}>{fmtNum(problem.votes + (didVote ? 1 : 0))}</span>
                 <span style={{ fontSize: 12, color: "var(--text3)" }}>votes</span>
               </div>
               <div className={`vote-btn${didMeToo ? " voted" : ""}`} onClick={() => onMeToo(problem.id)} style={{ flexDirection: "row", gap: 8 }}>
-                <span>ðŸ‘‹</span>
+                <span></span>
                 <span style={{ fontWeight: 700 }}>{fmtNum(problem.meToo + (didMeToo ? 1 : 0))}</span>
                 <span style={{ fontSize: 12, color: "var(--text3)" }}>me too</span>
               </div>
@@ -626,7 +626,7 @@ function DetailPage({ problem, setPage, votes, onVote, onMeToo, meToos, solution
               <div className="progress-bar" style={{ marginBottom: 6 }}>
                 <div className="progress-fill" style={{ width: `${meSolution.progress}%` }} />
               </div>
-              <div style={{ fontSize: 11, color: "var(--text3)" }}>{meSolution.progress}% complete Â· {meSolution.teamSize} team members Â· Beta in {meSolution.launchIn}</div>
+              <div style={{ fontSize: 11, color: "var(--text3)" }}>{meSolution.progress}% complete  {meSolution.teamSize} team members  Beta in {meSolution.launchIn}</div>
             </div>
           )}
 
@@ -685,7 +685,7 @@ function PostPage({ onSubmit, onBrowse }) {
   if (submitted) return (
     <div className="page" style={{ maxWidth: 560, margin: "0 auto" }}>
       <div className="card" style={{ padding: 40, textAlign: "center" }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸŽ‰</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}></div>
         <div style={{ fontFamily: "var(--font-display)", fontSize: 26, marginBottom: 12 }}>Problem posted!</div>
         <div style={{ fontSize: 14, color: "var(--text2)", marginBottom: 24, lineHeight: 1.7 }}>Your problem is now live and searchable. The community will start validating it, and builders will discover it through the feed and weekly digest.</div>
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
@@ -759,7 +759,7 @@ function PostPage({ onSubmit, onBrowse }) {
             <input className="form-input" placeholder="e.g. billing, insurance, transparency" value={form.tags} onChange={e => update("tags", e.target.value)} />
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <button className="btn btn-secondary" onClick={() => setStep(1)}>â† Back</button>
+            <button className="btn btn-secondary" onClick={() => setStep(1)}> Back</button>
             <button className="btn btn-primary" onClick={() => setStep(3)}>Continue {"\u2192"}</button>
           </div>
         </>}
@@ -767,7 +767,7 @@ function PostPage({ onSubmit, onBrowse }) {
         {step === 3 && <>
           <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}>Add a bounty (optional)</div>
           <div style={{ background: "var(--amber-bg)", border: "1px solid #fde68a", borderRadius: 8, padding: "12px 14px", marginBottom: 20, fontSize: 13, color: "var(--amber)", lineHeight: 1.6 }}>
-            ðŸ’° Offering a bounty dramatically increases builder interest. Funds are held in escrow and only released when you mark a solution accepted.
+             Offering a bounty dramatically increases builder interest. Funds are held in escrow and only released when you mark a solution accepted.
           </div>
           <div className="form-group">
             <label className="form-label">Bounty amount (USD)</label>
@@ -777,11 +777,11 @@ function PostPage({ onSubmit, onBrowse }) {
           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Review your problem</div>
           <div style={{ background: "var(--surface2)", borderRadius: 8, padding: "14px 16px", marginBottom: 20 }}>
             <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6 }}>{form.title || "(no title)"}</div>
-            <div style={{ fontSize: 12, color: "var(--text2)" }}>{form.industry} Â· {form.region || "Global"} Â· Severity {form.severity}/10 Â· {form.frequency}</div>
+            <div style={{ fontSize: 12, color: "var(--text2)" }}>{form.industry}  {form.region || "Global"}  Severity {form.severity}/10  {form.frequency}</div>
             {form.bounty > 0 && <div style={{ fontSize: 12, color: "var(--amber)", fontWeight: 600, marginTop: 4 }}>Bounty: ${Number(form.bounty).toLocaleString()}</div>}
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <button className="btn btn-secondary" onClick={() => setStep(2)}>â† Back</button>
+            <button className="btn btn-secondary" onClick={() => setStep(2)}> Back</button>
             <button className="btn btn-primary" onClick={handleSubmit} style={{ flex: 1, justifyContent: "center" }} disabled={posting}>{posting ? "Publishing\u2026" : "Publish problem \u2192"}</button>
           </div>
         </>}
@@ -814,7 +814,7 @@ function DashboardPage({ problems, solutions, setPage, currentUser }) {
           <Avatar name="You" size="lg" color="accent" />
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 22 }}>Your dashboard</div>
-            <div style={{ fontSize: 12, color: "var(--text3)" }}>Builder Â· Poster Â· {currentUserEmail}</div>
+            <div style={{ fontSize: 12, color: "var(--text3)" }}>Builder  Poster  {currentUserEmail}</div>
           </div>
         </div>
       </div>
@@ -863,7 +863,7 @@ function DashboardPage({ problems, solutions, setPage, currentUser }) {
                 <div className="progress-bar" style={{ marginBottom: 6 }}>
                   <div className="progress-fill" style={{ width: `${s.progress}%` }} />
                 </div>
-                <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 14 }}>{s.progress}% complete Â· {s.teamSize} team members Â· Beta in {s.launchIn}</div>
+                <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 14 }}>{s.progress}% complete  {s.teamSize} team members  Beta in {s.launchIn}</div>
                 <button className="btn btn-secondary btn-sm" onClick={() => setPage({ name: "detail", id: s.problemId })}>View problem {"\u2192"}</button>
               </div>
             ))}
@@ -886,10 +886,10 @@ function DashboardPage({ problems, solutions, setPage, currentUser }) {
                       <div className="score-label">score</div>
                     </div>
                   </div>
-                  <div className="problem-meta"><span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep">Â·</span><span>{fmtNum(p.votes)} votes</span><span className="problem-meta-sep">Â·</span><span>{p.comments} comments</span></div>
+                  <div className="problem-meta"><span>{fmtNum(p.meToo)} &quot;me too&quot;</span><span className="problem-meta-sep"></span><span>{fmtNum(p.votes)} votes</span><span className="problem-meta-sep"></span><span>{p.comments} comments</span></div>
                   <div className="problem-footer">
                     <span className="badge" style={{ background: statusBadge(p.status).bg, color: statusBadge(p.status).color }}>{statusBadge(p.status).label}</span>
-                    {p.bounty > 0 && <span className="bounty-tag">ðŸ’° ${p.bounty.toLocaleString()}</span>}
+                    {p.bounty > 0 && <span className="bounty-tag"> ${p.bounty.toLocaleString()}</span>}
                   </div>
                 </div>
               ))}
@@ -923,7 +923,7 @@ function DashboardPage({ problems, solutions, setPage, currentUser }) {
                 <div style={{ display: "flex", gap: 8 }}>
                   <button className="btn btn-secondary btn-sm">Update progress</button>
                   <button className="btn btn-secondary btn-sm">Find co-founder</button>
-                  <button className="btn btn-primary btn-sm" style={{ marginLeft: "auto" }}>Mark as launched ðŸš€</button>
+                  <button className="btn btn-primary btn-sm" style={{ marginLeft: "auto" }}>Mark as launched </button>
                 </div>
               </div>
             ))
@@ -1034,7 +1034,7 @@ function LeaderboardPage({ problems, solutions, currentUser }) {
             <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text3)", width: 28 }}>#{i + 1}</div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{p.title}</div>
-              <div style={{ fontSize: 12, color: "var(--text2)" }}>{p.industry} Â· {fmtNum(p.meToo)} &quot;me too&quot;s</div>
+              <div style={{ fontSize: 12, color: "var(--text2)" }}>{p.industry}  {fmtNum(p.meToo)} &quot;me too&quot;s</div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 22, fontWeight: 800, color: scoreColor(p.score) }}>{p.score}</div>
@@ -1154,8 +1154,23 @@ export default function App() {
       return false;
     }
 
+    const parsedTags = Array.isArray(form.tags)
+      ? form.tags
+      : typeof form.tags === "string" && form.tags.trim()
+      ? form.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+      : [];
+
     const payload = {
-      ...form,
+      title: form.title,
+      description: form.description,
+      who: form.who,
+      severity: Number(form.severity),
+      frequency: form.frequency,
+      industry: form.industry,
+      region: form.region,
+      bounty: Number(form.bounty) || 0,
+      tags: parsedTags,
+      status: "open",
       user_id: currentUser.id,
       score: Number(form.severity) * 0.7,
       me_too: 0,
@@ -1169,13 +1184,13 @@ export default function App() {
     const { error } = await supabase.from("problems").insert(payload);
 
     if (error) {
-      showToast("Could not publish problem");
+      showToast(error.message ? `Could not publish: ${error.message}` : "Could not publish problem");
       return false;
     }
 
     await Promise.all([loadProblems(), loadSolutions()]);
     setPage("browse");
-    showToast("Problem published! ðŸŽ‰");
+    showToast("Problem published! ");
     return true;
   }
 
@@ -1253,3 +1268,4 @@ export default function App() {
     </>
   );
 }
+

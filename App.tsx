@@ -1,6 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+//  Types 
 
 interface Problem {
   id: number;
@@ -45,7 +45,7 @@ type Page =
   | { name: "detail"; id: number }
   | { name: "browse"; industry: string };
 
-// ─── Seed Data ────────────────────────────────────────────────────────────────
+//  Seed Data 
 
 const INDUSTRIES = [
   "All","Healthcare","Fintech","SMB","Education",
@@ -56,7 +56,7 @@ const FREQUENCIES = ["Daily", "Weekly", "Monthly", "Occasionally"];
 const SEED_PROBLEMS: Problem[] = [
   {
     id: 1,
-    title: "Hospital billing is completely opaque — patients can't understand their charges",
+    title: "Hospital billing is completely opaque  patients can't understand their charges",
     description:
       "After any medical visit, patients receive bills weeks later with cryptic codes, no itemization, and no way to verify accuracy. The system is designed to confuse. I've been overbilled three times and had to fight each time.",
     who: "Patients, uninsured adults, low-income families",
@@ -94,7 +94,7 @@ const SEED_PROBLEMS: Problem[] = [
     id: 4,
     title: "Freelancers have no straightforward way to chase overdue invoices",
     description:
-      "I spend 3–5 hours per week just following up on unpaid invoices. There's no tool that automatically escalates, sends legal-sounding reminders, and tracks the full paper trail without costing a fortune.",
+      "I spend 35 hours per week just following up on unpaid invoices. There's no tool that automatically escalates, sends legal-sounding reminders, and tracks the full paper trail without costing a fortune.",
     who: "Freelance designers, developers, consultants",
     industry: "Fintech", region: "Global",
     severity: 8, frequency: "Weekly", meToo: 3210, votes: 5600,
@@ -130,8 +130,8 @@ const SEED_PROBLEMS: Problem[] = [
     id: 7,
     title: "Small law firms can't afford eDiscovery tools built for BigLaw",
     description:
-      "The cheapest eDiscovery platforms start at $5,000/month. I represent individuals and small businesses — my whole firm runs on $8k/month revenue. I'm stuck reviewing documents manually and it kills my margins.",
-    who: "Solo attorneys, small law firms (1–5 attorneys)",
+      "The cheapest eDiscovery platforms start at $5,000/month. I represent individuals and small businesses  my whole firm runs on $8k/month revenue. I'm stuck reviewing documents manually and it kills my margins.",
+    who: "Solo attorneys, small law firms (15 attorneys)",
     industry: "Legal", region: "USA",
     severity: 8, frequency: "Monthly", meToo: 320, votes: 680,
     bounty: 10000, status: "open", buildersCount: 2, score: 8.0,
@@ -160,7 +160,7 @@ const SEED_SOLUTIONS: Solution[] = [
   },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+//  Helpers 
 
 function scoreColor(s: number) {
   if (s >= 8.5) return "#dc2626";
@@ -191,7 +191,7 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(days / 30)}mo ago`;
 }
 
-// ─── Tiny UI Primitives ───────────────────────────────────────────────────────
+//  Tiny UI Primitives 
 
 function Badge({
   children, variant = "gray",
@@ -427,7 +427,7 @@ function Toast({ msg }: { msg: string }) {
   );
 }
 
-// ─── Problem Card ─────────────────────────────────────────────────────────────
+//  Problem Card 
 
 function ProblemCard({
   problem, onClick, voted, onVote,
@@ -447,9 +447,9 @@ function ProblemCard({
       </div>
 
       <div style={{ fontSize: 12, color: "#6b7280", display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
-        <span>{problem.industry}</span><span>·</span>
-        <span>{problem.region}</span><span>·</span>
-        <span>{fmtNum(problem.meToo)} "me too"</span><span>·</span>
+        <span>{problem.industry}</span><span></span>
+        <span>{problem.region}</span><span></span>
+        <span>{fmtNum(problem.meToo)} "me too"</span><span></span>
         <span>{timeAgo(problem.posted)}</span>
       </div>
 
@@ -458,7 +458,7 @@ function ProblemCard({
         {problem.severity >= 8 && <Badge variant="red">High severity</Badge>}
         {problem.bounty > 0 && (
           <span style={{ display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,fontSize:11,fontWeight:600,color:"#92400e" }}>
-            💰 ${problem.bounty.toLocaleString()}
+             ${problem.bounty.toLocaleString()}
           </span>
         )}
         {problem.buildersCount > 0 && <Badge variant="teal">{problem.buildersCount} builder{problem.buildersCount > 1 ? "s" : ""}</Badge>}
@@ -474,7 +474,7 @@ function ProblemCard({
             transition:"all 0.15s",
           }}
         >
-          <span style={{ fontSize: 13 }}>▲</span>
+          <span style={{ fontSize: 13 }}></span>
           <span style={{ fontSize: 14, fontWeight: 700, color: voted ? "#c84b2f" : "#111" }}>{fmtNum(problem.votes + (voted ? 1 : 0))}</span>
           <span style={{ fontSize: 10, color: "#9ca3af" }}>votes</span>
         </div>
@@ -483,7 +483,7 @@ function ProblemCard({
   );
 }
 
-// ─── Nav ──────────────────────────────────────────────────────────────────────
+//  Nav 
 
 function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
   const activePage = typeof page === "object" ? page.name : page;
@@ -538,7 +538,7 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
   );
 }
 
-// ─── Home Page ────────────────────────────────────────────────────────────────
+//  Home Page 
 
 function HomePage({ setPage, problems }: { setPage: (p: Page) => void; problems: Problem[] }) {
   return (
@@ -554,7 +554,7 @@ function HomePage({ setPage, problems }: { setPage: (p: Page) => void; problems:
             Post the frustrations you face every day. Discover them as validated startup ideas. Build solutions people actually need.
           </p>
           <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
-            <Btn variant="primary" onClick={() => setPage("post")} style={{ padding:"11px 28px", fontSize:15 }}>Post a problem →</Btn>
+            <Btn variant="primary" onClick={() => setPage("post")} style={{ padding:"11px 28px", fontSize:15 }}>Post a problem </Btn>
             <Btn variant="secondary" onClick={() => setPage("browse")} style={{ padding:"11px 28px", fontSize:15 }}>Browse problems</Btn>
           </div>
           <div style={{ display:"flex", gap:40, justifyContent:"center", marginTop:36, paddingTop:28, borderTop:"1px solid #e5e7eb", flexWrap:"wrap" }}>
@@ -575,7 +575,7 @@ function HomePage({ setPage, problems }: { setPage: (p: Page) => void; problems:
             <div style={{ fontSize:18, fontWeight:700, marginBottom:4 }}>Trending problems</div>
             <div style={{ fontSize:13, color:"#6b7280" }}>Highest-scored unsolved opportunities right now</div>
           </div>
-          <Btn variant="secondary" onClick={() => setPage("browse")} style={{ padding:"5px 14px", fontSize:13 }}>View all →</Btn>
+          <Btn variant="secondary" onClick={() => setPage("browse")} style={{ padding:"5px 14px", fontSize:13 }}>View all </Btn>
         </div>
         <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:36 }}>
           {problems.slice(0,4).map(p => {
@@ -590,11 +590,11 @@ function HomePage({ setPage, problems }: { setPage: (p: Page) => void; problems:
                   </div>
                 </div>
                 <div style={{ fontSize:12, color:"#6b7280", display:"flex", gap:10, flexWrap:"wrap", marginBottom:10 }}>
-                  <span>{p.industry}</span><span>·</span><span>{fmtNum(p.meToo)} "me too"</span><span>·</span><span>{timeAgo(p.posted)}</span>
+                  <span>{p.industry}</span><span></span><span>{fmtNum(p.meToo)} "me too"</span><span></span><span>{timeAgo(p.posted)}</span>
                 </div>
                 <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                   <span style={{ display:"inline-flex",alignItems:"center",padding:"3px 9px",borderRadius:20,fontSize:11,fontWeight:500,background:sb.bg,color:sb.color }}>{sb.label}</span>
-                  {p.bounty > 0 && <span style={{ display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,fontSize:11,fontWeight:600,color:"#92400e" }}>💰 ${p.bounty.toLocaleString()}</span>}
+                  {p.bounty > 0 && <span style={{ display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,fontSize:11,fontWeight:600,color:"#92400e" }}> ${p.bounty.toLocaleString()}</span>}
                   {p.buildersCount > 0 && <Badge variant="teal">{p.buildersCount} builder{p.buildersCount>1?"s":""}</Badge>}
                 </div>
               </Card>
@@ -622,7 +622,7 @@ function HomePage({ setPage, problems }: { setPage: (p: Page) => void; problems:
   );
 }
 
-// ─── Browse Page ──────────────────────────────────────────────────────────────
+//  Browse Page 
 
 function BrowsePage({
   problems, setPage, votes, onVote, initialIndustry,
@@ -656,10 +656,10 @@ function BrowsePage({
         </div>
         <div style={{ display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
           <div style={{ position:"relative" }}>
-            <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"#9ca3af", fontSize:13 }}>🔍</span>
+            <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"#9ca3af", fontSize:13 }}></span>
             <input
               value={search} onChange={e=>setSearch(e.target.value)}
-              placeholder="Search problems…"
+              placeholder="Search problems"
               style={{ padding:"7px 12px 7px 32px", border:"1px solid #e5e7eb", borderRadius:8, fontSize:13, fontFamily:"inherit", outline:"none", width:240 }}
             />
           </div>
@@ -697,7 +697,7 @@ function BrowsePage({
   );
 }
 
-// ─── Detail Page ──────────────────────────────────────────────────────────────
+//  Detail Page 
 
 function DetailPage({
   problem, setPage, votes, onVote, onMeToo, meToos, solutions,
@@ -709,7 +709,7 @@ function DetailPage({
 }) {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([
-    { id:1, author:"Sarah K.", time:"2 days ago", text:"This is exactly the problem I face every month. The lack of transparency is intentional — hospitals profit from confusion." },
+    { id:1, author:"Sarah K.", time:"2 days ago", text:"This is exactly the problem I face every month. The lack of transparency is intentional  hospitals profit from confusion." },
     { id:2, author:"James O.", time:"5 days ago", text:"I built a basic spreadsheet tool to parse EOBs. Happy to share. But a real solution needs to integrate with insurance APIs." },
     { id:3, author:"Priya M.", time:"1 week ago",  text:"Similar problem in India but with private hospital billing. Would a US-focused solution be adaptable here?" },
   ]);
@@ -724,7 +724,7 @@ function DetailPage({
   return (
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"32px 24px" }}>
       <div style={{ marginBottom:20 }}>
-        <Btn variant="ghost" onClick={() => setPage("browse")} style={{ padding:"5px 10px", fontSize:13 }}>← Back</Btn>
+        <Btn variant="ghost" onClick={() => setPage("browse")} style={{ padding:"5px 10px", fontSize:13 }}> Back</Btn>
       </div>
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 320px", gap:24 }}>
@@ -743,13 +743,13 @@ function DetailPage({
             <div style={{ display:"flex", gap:10, marginBottom:20, flexWrap:"wrap" }}>
               {/* vote */}
               <div onClick={()=>onVote(problem.id)} style={{ display:"flex",flexDirection:"row",alignItems:"center",gap:8,padding:"8px 14px",borderRadius:8,cursor:"pointer",border:`1px solid ${didVote?"#c84b2f":"#e5e7eb"}`,background:didVote?"#fff0ed":"#fff",transition:"all 0.15s" }}>
-                <span>▲</span>
+                <span></span>
                 <span style={{ fontWeight:700 }}>{fmtNum(problem.votes+(didVote?1:0))}</span>
                 <span style={{ fontSize:12, color:"#9ca3af" }}>votes</span>
               </div>
               {/* me too */}
               <div onClick={()=>onMeToo(problem.id)} style={{ display:"flex",flexDirection:"row",alignItems:"center",gap:8,padding:"8px 14px",borderRadius:8,cursor:"pointer",border:`1px solid ${didMeToo?"#c84b2f":"#e5e7eb"}`,background:didMeToo?"#fff0ed":"#fff",transition:"all 0.15s" }}>
-                <span>👋</span>
+                <span></span>
                 <span style={{ fontWeight:700 }}>{fmtNum(problem.meToo+(didMeToo?1:0))}</span>
                 <span style={{ fontSize:12, color:"#9ca3af" }}>me too</span>
               </div>
@@ -809,7 +809,7 @@ function DetailPage({
             <div style={{ marginTop:16, display:"flex", gap:10 }}>
               <Avatar name="You" variant="accent" />
               <div style={{ flex:1 }}>
-                <Textarea value={comment} onChange={setComment} placeholder="Add context, examples, or your experience…" rows={3} />
+                <Textarea value={comment} onChange={setComment} placeholder="Add context, examples, or your experience" rows={3} />
                 <Btn variant="primary" onClick={()=>{ if(!comment.trim())return; setComments(prev=>[...prev,{id:Date.now(),author:"You",time:"just now",text:comment}]); setComment(""); }} style={{ marginTop:8, padding:"6px 14px", fontSize:12 }}>Post comment</Btn>
               </div>
             </div>
@@ -825,10 +825,10 @@ function DetailPage({
               <p style={{ fontSize:12, color:"#6b7280", marginBottom:14, lineHeight:1.6 }}>Paid out when poster marks solution accepted. Funds held in escrow via Stripe.</p>
               {!claimed ? (
                 <Btn variant="amber" onClick={()=>{ setClaiming(true); setTimeout(()=>{ setClaimed(true); setClaiming(false); },800); }} style={{ width:"100%", justifyContent:"center" }}>
-                  {claiming ? "Claiming…" : "Claim this bounty →"}
+                  {claiming ? "Claiming" : "Claim this bounty "}
                 </Btn>
               ) : (
-                <Badge variant="green">✓ Bounty claimed — start building!</Badge>
+                <Badge variant="green"> Bounty claimed  start building!</Badge>
               )}
             </Card>
           )}
@@ -839,7 +839,7 @@ function DetailPage({
               <div style={{ fontWeight:700, fontSize:15, marginBottom:4 }}>{meSol.title}</div>
               <p style={{ fontSize:12, color:"#6b7280", marginBottom:12, lineHeight:1.6 }}>{meSol.description}</p>
               <ProgressBar value={meSol.progress} />
-              <div style={{ fontSize:11, color:"#9ca3af", marginTop:6 }}>{meSol.progress}% complete · {meSol.teamSize} team members · Beta in {meSol.launchIn}</div>
+              <div style={{ fontSize:11, color:"#9ca3af", marginTop:6 }}>{meSol.progress}% complete  {meSol.teamSize} team members  Beta in {meSol.launchIn}</div>
             </Card>
           )}
 
@@ -848,7 +848,7 @@ function DetailPage({
             <p style={{ fontSize:13, color:"#6b7280", marginBottom:12 }}>
               {problem.buildersCount === 0 ? "Be the first to build a solution" : `${problem.buildersCount} builder${problem.buildersCount>1?"s":""} working on this`}
             </p>
-            {!claimed && <Btn variant="teal" style={{ width:"100%", justifyContent:"center" }}>Start building →</Btn>}
+            {!claimed && <Btn variant="teal" style={{ width:"100%", justifyContent:"center" }}>Start building </Btn>}
           </Card>
 
           <Card style={{ padding:20 }}>
@@ -866,7 +866,7 @@ function DetailPage({
   );
 }
 
-// ─── Post Page ────────────────────────────────────────────────────────────────
+//  Post Page 
 
 function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
   const [step, setStep] = useState(1);
@@ -897,7 +897,7 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
   if (submitted) return (
     <div style={{ maxWidth:560, margin:"60px auto", padding:"0 24px" }}>
       <Card style={{ padding:44, textAlign:"center" }}>
-        <div style={{ fontSize:52, marginBottom:16 }}>🎉</div>
+        <div style={{ fontSize:52, marginBottom:16 }}></div>
         <div style={{ fontFamily:"Georgia,serif", fontSize:26, marginBottom:12 }}>Problem posted!</div>
         <p style={{ fontSize:14, color:"#6b7280", marginBottom:28, lineHeight:1.7 }}>Your problem is now live and searchable. The community will start validating it, and builders will discover it through the feed and weekly digest.</p>
         <div style={{ display:"flex", gap:10, justifyContent:"center" }}>
@@ -912,7 +912,7 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
     <div style={{ maxWidth:640, margin:"0 auto", padding:"32px 24px" }}>
       <div style={{ marginBottom:24 }}>
         <div style={{ fontSize:18, fontWeight:700, marginBottom:4 }}>Post a problem</div>
-        <div style={{ fontSize:13, color:"#6b7280", marginBottom:16 }}>Describe a real frustration you face. Be specific — the more concrete, the more valuable.</div>
+        <div style={{ fontSize:13, color:"#6b7280", marginBottom:16 }}>Describe a real frustration you face. Be specific  the more concrete, the more valuable.</div>
         <div style={{ display:"flex", gap:6, marginBottom:6 }}>
           {[1,2,3].map(s=>(
             <div key={s} style={{ height:4, flex:1, borderRadius:2, background: s<=step ? "#c84b2f" : "#e5e7eb", transition:"background 0.2s" }} />
@@ -938,7 +938,7 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
               <div style={{ fontSize:12, fontWeight:600, color:"#6b7280", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6 }}>Who faces this problem? *</div>
               <Input value={form.who} onChange={v=>upd("who",v)} placeholder="e.g. Freelance designers and independent consultants" />
             </div>
-            <Btn variant="primary" onClick={()=>form.title&&form.description&&form.who&&setStep(2)}>Continue →</Btn>
+            <Btn variant="primary" onClick={()=>form.title&&form.description&&form.who&&setStep(2)}>Continue </Btn>
           </>
         )}
 
@@ -959,7 +959,7 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
               <div style={{ fontSize:12, fontWeight:600, color:"#6b7280", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6 }}>Severity: {form.severity}/10</div>
               <input type="range" min={1} max={10} value={form.severity} onChange={e=>upd("severity",Number(e.target.value))} style={{ width:"100%", accentColor:"#c84b2f" }} />
               <SeverityBar value={form.severity} />
-              <div style={{ fontSize:11, color:"#9ca3af", marginTop:4 }}>1 = minor annoyance · 10 = critical, daily pain</div>
+              <div style={{ fontSize:11, color:"#9ca3af", marginTop:4 }}>1 = minor annoyance  10 = critical, daily pain</div>
             </div>
             <div style={{ marginBottom:14 }}>
               <div style={{ fontSize:12, fontWeight:600, color:"#6b7280", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6 }}>Frequency</div>
@@ -970,8 +970,8 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
               <Input value={form.tags} onChange={v=>upd("tags",v)} placeholder="e.g. billing, insurance, transparency" />
             </div>
             <div style={{ display:"flex", gap:10 }}>
-              <Btn variant="secondary" onClick={()=>setStep(1)}>← Back</Btn>
-              <Btn variant="primary" onClick={()=>setStep(3)}>Continue →</Btn>
+              <Btn variant="secondary" onClick={()=>setStep(1)}> Back</Btn>
+              <Btn variant="primary" onClick={()=>setStep(3)}>Continue </Btn>
             </div>
           </>
         )}
@@ -980,22 +980,22 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
           <>
             <div style={{ fontWeight:700, fontSize:16, marginBottom:20 }}>Add a bounty (optional)</div>
             <div style={{ background:"#fffbeb", border:"1px solid #fde68a", borderRadius:8, padding:"12px 14px", marginBottom:20, fontSize:13, color:"#92400e", lineHeight:1.6 }}>
-              💰 Offering a bounty dramatically increases builder interest. Funds are held in escrow and only released when you accept a solution.
+               Offering a bounty dramatically increases builder interest. Funds are held in escrow and only released when you accept a solution.
             </div>
             <div style={{ marginBottom:20 }}>
               <div style={{ fontSize:12, fontWeight:600, color:"#6b7280", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6 }}>Bounty amount (USD)</div>
-              <Input value={form.bounty} onChange={v=>upd("bounty",v)} type="number" placeholder="0 — leave blank for no bounty" />
+              <Input value={form.bounty} onChange={v=>upd("bounty",v)} type="number" placeholder="0  leave blank for no bounty" />
             </div>
             <div style={{ height:1, background:"#f3f4f6", margin:"20px 0" }} />
             <div style={{ fontWeight:700, fontSize:14, marginBottom:12 }}>Review your problem</div>
             <div style={{ background:"#f9fafb", borderRadius:8, padding:"14px 16px", marginBottom:20 }}>
               <div style={{ fontWeight:600, fontSize:14, marginBottom:6 }}>{form.title || "(no title)"}</div>
-              <div style={{ fontSize:12, color:"#6b7280" }}>{form.industry} · {form.region||"Global"} · Severity {form.severity}/10 · {form.frequency}</div>
+              <div style={{ fontSize:12, color:"#6b7280" }}>{form.industry}  {form.region||"Global"}  Severity {form.severity}/10  {form.frequency}</div>
               {Number(form.bounty)>0 && <div style={{ fontSize:12, color:"#d97706", fontWeight:600, marginTop:4 }}>Bounty: ${Number(form.bounty).toLocaleString()}</div>}
             </div>
             <div style={{ display:"flex", gap:10 }}>
-              <Btn variant="secondary" onClick={()=>setStep(2)}>← Back</Btn>
-              <Btn variant="primary" onClick={handleSubmit} style={{ flex:1, justifyContent:"center" }}>Publish problem →</Btn>
+              <Btn variant="secondary" onClick={()=>setStep(2)}> Back</Btn>
+              <Btn variant="primary" onClick={handleSubmit} style={{ flex:1, justifyContent:"center" }}>Publish problem </Btn>
             </div>
           </>
         )}
@@ -1004,7 +1004,7 @@ function PostPage({ onSubmit }: { onSubmit: (p: Problem) => void }) {
   );
 }
 
-// ─── Dashboard Page ───────────────────────────────────────────────────────────
+//  Dashboard Page 
 
 function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; solutions: Solution[]; setPage: (p: Page) => void }) {
   const [tab, setTab] = useState("overview");
@@ -1016,7 +1016,7 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
         <Avatar name="You" size="lg" variant="accent" />
         <div>
           <div style={{ fontFamily:"Georgia,serif", fontSize:22 }}>Your dashboard</div>
-          <div style={{ fontSize:12, color:"#9ca3af" }}>Builder · Poster · Member since Nov 2025</div>
+          <div style={{ fontSize:12, color:"#9ca3af" }}>Builder  Poster  Member since Nov 2025</div>
         </div>
       </div>
 
@@ -1056,8 +1056,8 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
                 <div style={{ fontWeight:700, fontSize:15, marginBottom:4 }}>{s.title}</div>
                 <p style={{ fontSize:12, color:"#6b7280", marginBottom:14, lineHeight:1.6 }}>{s.description}</p>
                 <ProgressBar value={s.progress} />
-                <div style={{ fontSize:12, color:"#9ca3af", marginTop:6, marginBottom:16 }}>{s.progress}% complete · {s.teamSize} team members · Beta in {s.launchIn}</div>
-                <Btn variant="secondary" onClick={()=>setPage({ name:"detail", id:s.problemId })} style={{ fontSize:12, padding:"5px 12px" }}>View problem →</Btn>
+                <div style={{ fontSize:12, color:"#9ca3af", marginTop:6, marginBottom:16 }}>{s.progress}% complete  {s.teamSize} team members  Beta in {s.launchIn}</div>
+                <Btn variant="secondary" onClick={()=>setPage({ name:"detail", id:s.problemId })} style={{ fontSize:12, padding:"5px 12px" }}>View problem </Btn>
               </Card>
             ))}
           </div>
@@ -1086,13 +1086,13 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
                       </div>
                     </div>
                     <div style={{ fontSize:12, color:"#6b7280", display:"flex", gap:10, marginBottom:10 }}>
-                      <span>{fmtNum(p.meToo)} "me too"</span><span>·</span>
-                      <span>{fmtNum(p.votes)} votes</span><span>·</span>
+                      <span>{fmtNum(p.meToo)} "me too"</span><span></span>
+                      <span>{fmtNum(p.votes)} votes</span><span></span>
                       <span>{p.comments} comments</span>
                     </div>
                     <div style={{ display:"flex", gap:8 }}>
                       <span style={{ display:"inline-flex",alignItems:"center",padding:"3px 9px",borderRadius:20,fontSize:11,fontWeight:500,background:sb.bg,color:sb.color }}>{sb.label}</span>
-                      {p.bounty>0 && <span style={{ display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,fontSize:11,fontWeight:600,color:"#92400e" }}>💰 ${p.bounty.toLocaleString()}</span>}
+                      {p.bounty>0 && <span style={{ display:"inline-flex",alignItems:"center",gap:4,padding:"3px 9px",background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,fontSize:11,fontWeight:600,color:"#92400e" }}> ${p.bounty.toLocaleString()}</span>}
                     </div>
                   </Card>
                 );
@@ -1128,7 +1128,7 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
               <div style={{ display:"flex", gap:8 }}>
                 <Btn variant="secondary" style={{ fontSize:12, padding:"5px 12px" }}>Update progress</Btn>
                 <Btn variant="secondary" style={{ fontSize:12, padding:"5px 12px" }}>Find co-founder</Btn>
-                <Btn variant="primary" style={{ marginLeft:"auto", fontSize:12, padding:"5px 12px" }}>Mark as launched 🚀</Btn>
+                <Btn variant="primary" style={{ marginLeft:"auto", fontSize:12, padding:"5px 12px" }}>Mark as launched </Btn>
               </div>
             </Card>
           ))}
@@ -1138,15 +1138,15 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
       {tab==="activity" && (
         <Card style={{ padding:20 }}>
           {[
-            "Your problem 'Freelancers chasing invoices' received 12 new votes — 2h ago",
-            "New builder claimed your problem 'Hospital billing transparency' — 1d ago",
-            "Someone added a 'me too' to your medication tracking problem — 2d ago",
-            "Your solution 'InvoiceHound' was featured in the weekly digest — 3d ago",
-            "New comment on 'Hospital billing is completely opaque' — 4d ago",
+            "Your problem 'Freelancers chasing invoices' received 12 new votes  2h ago",
+            "New builder claimed your problem 'Hospital billing transparency'  1d ago",
+            "Someone added a 'me too' to your medication tracking problem  2d ago",
+            "Your solution 'InvoiceHound' was featured in the weekly digest  3d ago",
+            "New comment on 'Hospital billing is completely opaque'  4d ago",
           ].map((n,i)=>(
             <div key={i} style={{ display:"flex", gap:12, alignItems:"flex-start", padding:"12px 0", borderBottom:i<4?"1px solid #f3f4f6":"none" }}>
               <div style={{ width:8, height:8, background:"#c84b2f", borderRadius:"50%", flexShrink:0, marginTop:5 }} />
-              <div style={{ flex:1, fontSize:13 }}>{n.split(" — ")[0]}<span style={{ color:"#9ca3af", marginLeft:8, fontSize:11 }}>{n.split(" — ")[1]}</span></div>
+              <div style={{ flex:1, fontSize:13 }}>{n.split("  ")[0]}<span style={{ color:"#9ca3af", marginLeft:8, fontSize:11 }}>{n.split("  ")[1]}</span></div>
             </div>
           ))}
         </Card>
@@ -1155,7 +1155,7 @@ function DashboardPage({ problems, solutions, setPage }: { problems: Problem[]; 
   );
 }
 
-// ─── Leaderboard Page ─────────────────────────────────────────────────────────
+//  Leaderboard Page 
 
 function LeaderboardPage({ problems }: { problems: Problem[] }) {
   const topPosters = [
@@ -1180,7 +1180,7 @@ function LeaderboardPage({ problems }: { problems: Problem[] }) {
       <div style={{ fontSize:13, color:"#6b7280", marginBottom:28 }}>Top contributors building the problem marketplace</div>
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:24, marginBottom:36 }}>
-        {[["🏆 Top problem posters", topPosters, false],["🔧 Top builders", topBuilders, true]].map(([title, list, isBuilder])=>(
+        {[[" Top problem posters", topPosters, false],[" Top builders", topBuilders, true]].map(([title, list, isBuilder])=>(
           <div key={String(title)}>
             <div style={{ fontWeight:700, fontSize:15, marginBottom:14 }}>{String(title)}</div>
             <Card style={{ padding:"8px 20px" }}>
@@ -1210,7 +1210,7 @@ function LeaderboardPage({ problems }: { problems: Problem[] }) {
             <div style={{ fontSize:20, fontWeight:800, color:"#9ca3af", width:28 }}>#{i+1}</div>
             <div style={{ flex:1 }}>
               <div style={{ fontWeight:600, fontSize:14 }}>{p.title}</div>
-              <div style={{ fontSize:12, color:"#6b7280" }}>{p.industry} · {fmtNum(p.meToo)} "me too"s</div>
+              <div style={{ fontSize:12, color:"#6b7280" }}>{p.industry}  {fmtNum(p.meToo)} "me too"s</div>
             </div>
             <div style={{ textAlign:"right" }}>
               <div style={{ fontSize:22, fontWeight:800, color:scoreColor(p.score) }}>{p.score}</div>
@@ -1223,7 +1223,7 @@ function LeaderboardPage({ problems }: { problems: Problem[] }) {
   );
 }
 
-// ─── Root App ─────────────────────────────────────────────────────────────────
+//  Root App 
 
 export default function App() {
   const [page, setPage] = useState<Page>("home");
@@ -1240,17 +1240,17 @@ export default function App() {
 
   function onVote(id: number) {
     setVotes(v => v.includes(id) ? v.filter(x=>x!==id) : [...v, id]);
-    showToast(votes.includes(id) ? "Vote removed" : "Voted! 👍");
+    showToast(votes.includes(id) ? "Vote removed" : "Voted! ");
   }
 
   function onMeToo(id: number) {
     setMeToos(v => v.includes(id) ? v.filter(x=>x!==id) : [...v, id]);
-    showToast(meToos.includes(id) ? "Removed" : '"Me too" added 👋');
+    showToast(meToos.includes(id) ? "Removed" : '"Me too" added ');
   }
 
   function onPostProblem(p: Problem) {
     setProblems(prev => [p, ...prev]);
-    showToast("Problem published! 🎉");
+    showToast("Problem published! ");
   }
 
   const activePage = typeof page === "object" ? page.name : page;
@@ -1286,3 +1286,4 @@ export default function App() {
     </div>
   );
 }
+
