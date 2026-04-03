@@ -1154,6 +1154,14 @@ export default function App() {
       return false;
     }
 
+    // Best-effort sync for projects where problems.user_id references public.users(id).
+    await supabase
+      .from("users")
+      .upsert(
+        { id: currentUser.id, email: currentUser.email || null },
+        { onConflict: "id" }
+      );
+
     const parsedTags = Array.isArray(form.tags)
       ? form.tags
       : typeof form.tags === "string" && form.tags.trim()
@@ -1184,7 +1192,7 @@ export default function App() {
     const insertPayload = { ...payload };
     let insertError = null;
 
-    for (let attempt = 0; attempt < 8; attempt += 1) {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
       const { error } = await supabase.from("problems").insert(insertPayload);
       if (!error) {
         insertError = null;
@@ -1193,7 +1201,22 @@ export default function App() {
 
       insertError = error;
       const missingColumnMatch = error.message && error.message.match(/Could not find the '([^']+)' column/);
-      if (!missingColumnMatch) break;
+      if (!missingColumnMatch) {
+        const fkUserMatch = error.message && error.message.includes("problems_user_id_fkey");
+        const fkPosterMatch = error.message && error.message.includes("poster_id");
+
+        if (fkUserMatch && Object.prototype.hasOwnProperty.call(insertPayload, "user_id")) {
+          delete insertPayload.user_id;
+          continue;
+        }
+
+        if (fkPosterMatch && Object.prototype.hasOwnProperty.call(insertPayload, "poster_id")) {
+          delete insertPayload.poster_id;
+          continue;
+        }
+
+        break;
+      }
 
       const missingColumn = missingColumnMatch[1];
       if (!Object.prototype.hasOwnProperty.call(insertPayload, missingColumn)) break;
