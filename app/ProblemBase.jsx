@@ -1181,10 +1181,27 @@ export default function App() {
       poster_id: currentUser.id,
     };
 
-    const { error } = await supabase.from("problems").insert(payload);
+    const insertPayload = { ...payload };
+    let insertError = null;
 
-    if (error) {
-      showToast(error.message ? `Could not publish: ${error.message}` : "Could not publish problem");
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const { error } = await supabase.from("problems").insert(insertPayload);
+      if (!error) {
+        insertError = null;
+        break;
+      }
+
+      insertError = error;
+      const missingColumnMatch = error.message && error.message.match(/Could not find the '([^']+)' column/);
+      if (!missingColumnMatch) break;
+
+      const missingColumn = missingColumnMatch[1];
+      if (!Object.prototype.hasOwnProperty.call(insertPayload, missingColumn)) break;
+      delete insertPayload[missingColumn];
+    }
+
+    if (insertError) {
+      showToast(insertError.message ? `Could not publish: ${insertError.message}` : "Could not publish problem");
       return false;
     }
 
