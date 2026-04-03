@@ -1185,7 +1185,7 @@ function LeaderboardPage({ problems }: { problems: Problem[] }) {
             <div style={{ fontWeight:700, fontSize:15, marginBottom:14 }}>{String(title)}</div>
             <Card style={{ padding:"8px 20px" }}>
               {(list as typeof topPosters).map((u,i)=>(
-                <div key={u.name} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 0", borderBottom:i<4?"1px solid #f3f4f6":"none", background:u.name==="You"?"#fff0ed":"transparent", margin:u.name==="You"?"0 -20px":"0", padding_:u.name==="You"?"10px 20px":"10px 0" }}>
+                <div key={u.name} style={{ display:"flex", alignItems:"center", gap:12, borderBottom:i<4?"1px solid #f3f4f6":"none", background:u.name==="You"?"#fff0ed":"transparent", margin:u.name==="You"?"0 -20px":"0", padding:u.name==="You"?"10px 20px":"10px 0" }}>
                   <div style={{ fontSize:13, fontWeight:700, color:i<3?rankColors[i]:"#9ca3af", width:24 }}>#{i+1}</div>
                   <Avatar name={u.name} variant={["accent","teal","purple","accent","teal"][i] as any} />
                   <div style={{ flex:1, fontWeight:600, fontSize:13 }}>
